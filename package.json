@@ -1,0 +1,47 @@
+{
+  "name": "react-tailwind-generator",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@codemirror/lang-javascript": "^6.1.9",
+    "@testing-library/jest-dom": "^5.17.0",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "@uiw/react-codemirror": "^4.21.9",
+    "autoprefixer": "^10.4.14",
+    "axios": "^1.4.0",
+    "codemirror": "^6.0.1",
+    "cors": "^2.8.5",
+    "openai": "^3.3.0",
+    "postcss": "^8.4.27",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "5.0.1",
+    "tailwindcss": "^3.3.3",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "PORT=8080 react-scripts start",
+    "build": "PORT=8080 react-scripts build",
+    "test": "PORT=8080 react-scripts test",
+    "eject": "PORT=8080 react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
