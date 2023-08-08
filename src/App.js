@@ -40,7 +40,7 @@ function App() {
 
       {/* Sidebar for Prompt */}
       <div className="flex-none w-1/4 p-8 bg-white rounded-2xl shadow-lg space-y-8 overflow-y-auto">
-          <h1 className="text-2xl font-bold mb-4 text-gray-700">Ask GPT-3</h1>
+          <h1 className="text-2xl font-bold mb-4 text-gray-700">Ask GPT</h1>
           <form className="space-y-4" onSubmit={handleSubmit}>
               <div>
                   <label className="block text-sm font-medium text-gray-600 mb-2">Prompt:</label>
@@ -65,7 +65,7 @@ function App() {
 
       {/* Main Content Area for Response */}
       <div className="flex-1 p-8 bg-gray-100 rounded-2xl shadow-lg overflow-y-auto">
-          <h2 className="text-xl font-bold text-gray-700 mb-4">GPT-3's Response:</h2>
+          <h2 className="text-xl font-bold text-gray-700 mb-4">Response:</h2>
           {codeBlocks.map((block, index) => {
               const isCode = block.trim().startsWith('<') || block.trim().includes(';');
               return isCode ? 
