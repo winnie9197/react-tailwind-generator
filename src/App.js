@@ -32,59 +32,58 @@ function App() {
     console.log('value:', value);
   }, []);
 
+  // Split the response into code blocks
+  const codeBlocks = response.split('```').filter(block => block.trim() !== '');
+
   return (
-    <div className="flex flex-col h-screen bg-gray-300 items-center justify-center p-4">
+    <div className="flex h-screen bg-gray-300 p-4">
 
-      {/* Main Container */}
-      <div className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-3xl space-y-8">
-
-          {/* Title */}
-          <h1 className="text-3xl font-semibold text-center text-gray-800 mb-6">Ask GPT</h1>
-          
-          {/* Prompt Section */}
-          <div className="space-y-4 border-b-2 pb-6">
-              <label className="block text-xl font-medium text-gray-700 mb-2">Prompt:</label>
-              <form className="space-y-4" onSubmit={handleSubmit}>
-                  <div>
-                      <textarea 
-                          className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none"
-                          rows="5"
-                          placeholder="Enter your prompt here..."
-                          value={prompt}
-                          onChange={handlePromptChange}
-                      ></textarea>
-                  </div>
-                  <div>
-                      <button 
-                          type="submit"
-                          className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-colors"
-                      >
-                          Submit
-                      </button>
-                  </div>
-              </form>
-          </div>
-
-          {/* Response Section */}
-          <div className="space-y-4 mt-6">
-              <label className="block text-xl font-medium text-gray-700 mb-2">Response:</label>
-              <div className="flex-1 p-4 border rounded-lg bg-gray-100">
-                  <CodeMirror
-                      value={response || ""}
-                      height="300px"
-                      width="100%"
-                      extensions={[javascript({ jsx: true })]}
-                      onChange={onCodeChange}
-                  />
+      {/* Sidebar for Prompt */}
+      <div className="flex-none w-1/4 p-8 bg-white rounded-2xl shadow-lg space-y-8 overflow-y-auto">
+          <h1 className="text-2xl font-bold mb-4 text-gray-700">Ask GPT-3</h1>
+          <form className="space-y-4" onSubmit={handleSubmit}>
+              <div>
+                  <label className="block text-sm font-medium text-gray-600 mb-2">Prompt:</label>
+                  <textarea 
+                      className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none"
+                      rows="10"
+                      placeholder="Enter your prompt here..."
+                      value={prompt}
+                      onChange={handlePromptChange}
+                  ></textarea>
               </div>
-          </div>
+              <div>
+                  <button 
+                      type="submit"
+                      className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-colors"
+                  >
+                      Submit
+                  </button>
+              </div>
+          </form>
       </div>
 
-      {error && (
-          <div className="mt-6 text-center">
-              <p className="text-red-500 font-medium">{error}</p>
-          </div>
-      )}
+      {/* Main Content Area for Response */}
+      <div className="flex-1 p-8 bg-gray-100 rounded-2xl shadow-lg overflow-y-auto">
+          <h2 className="text-xl font-bold text-gray-700 mb-4">GPT-3's Response:</h2>
+          {codeBlocks.map((block, index) => {
+              const isCode = block.trim().startsWith('<') || block.trim().includes(';');
+              return isCode ? 
+                  (
+                      <div key={index} className="flex-1 p-4 mb-4 border rounded-lg bg-white">
+                          <CodeMirror
+                              value={block}
+                              height="auto"
+                              width="100%"
+                              extensions={[javascript({ jsx: true })]}
+                              onChange={onCodeChange}
+                          />
+                      </div>
+                  ) : 
+                  (<p key={index} className="my-4 p-4 border rounded-lg bg-white">{block}</p>)
+          })}
+      </div>
+
   </div>
 
   );
