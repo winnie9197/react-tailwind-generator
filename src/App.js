@@ -1,10 +1,44 @@
 import './App.css';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import CodeMirror from '@uiw/react-codemirror';
 import { javascript } from '@codemirror/lang-javascript';
 
 const { Configuration, OpenAIApi } = require("openai");
+
+function getExtensionFromContent(firstLine) {
+    switch (firstLine) {
+        case "javascript":
+            return ".js"
+        case "css":
+            return ".css"
+        default:
+            return ".txt"
+    }
+}
+
+function processContent(rawContent) {
+  const lines = rawContent.trim().split('\n');
+  const firstLine = lines[0].trim().toLowerCase();
+
+  const extension = getExtensionFromContent(firstLine);
+
+  // Remove the first line for display
+  const content = lines.slice(1).join('\n');
+
+  return { extension, content };
+}
+
+function downloadContent(filename, content) {
+  const blob = new Blob([content], { type: 'text/plain;charset=utf-8;' });
+  const element = document.createElement('a');
+  element.setAttribute('href', URL.createObjectURL(blob));
+  element.setAttribute('download', filename);
+  element.style.display = 'none';
+  document.body.appendChild(element);
+  element.click();
+  document.body.removeChild(element);
+}
 
 function App() {
   const [prompt, setPrompt] = useState('');
@@ -33,7 +67,7 @@ function App() {
   }, []);
 
   // Split the response into code blocks
-  const codeBlocks = response.split('```').filter(block => block.trim() !== '');
+  const codeBlocks = response.split("```").filter(block => block.trim() !== "");
 
   return (
     <div className="flex h-screen bg-gray-300 p-4">
@@ -67,21 +101,34 @@ function App() {
       <div className="flex-1 p-8 bg-gray-100 rounded-2xl shadow-lg overflow-y-auto">
           <h2 className="text-xl font-bold text-gray-700 mb-4">Response:</h2>
           {codeBlocks.map((block, index) => {
-              const isCode = block.trim().startsWith('<') || block.trim().includes(';');
-              return isCode ? 
-                  (
-                      <div key={index} className="flex-1 p-4 mb-4 border rounded-lg bg-white">
-                          <CodeMirror
-                              value={block}
-                              height="auto"
-                              width="100%"
-                              extensions={[javascript({ jsx: true })]}
-                              onChange={onCodeChange}
-                          />
-                      </div>
-                  ) : 
-                  (<p key={index} className="my-4 p-4 border rounded-lg bg-white">{block}</p>)
-          })}
+            const { extension, content } = processContent(block);
+
+            // Using a rudimentary check to decide if a block is code or not.
+            const isCode = content.trim().startsWith('<') || content.trim().includes(';');
+
+            return isCode ? 
+            (
+              <div key={index} className="flex-1 p-4 mb-4 border rounded-lg bg-white relative">
+                  <button 
+                      onClick={() => downloadContent(`codeblock_${index}${extension}`, block)}
+                      className="absolute top-2 right-2 p-2 rounded transition-colors z-10"
+                      title="Download" 
+                  >
+                      <i className="fas fa-download text-gray-300"></i>
+
+                  </button>
+                  <CodeMirror
+                      value={content}
+                      height="auto"
+                      width="100%"
+                      extensions={[javascript({ jsx: true })]}
+                      onChange={onCodeChange}
+                  />
+              </div>
+          
+            ) : 
+            (<p key={index} className="my-4 p-4 border rounded-lg bg-white">{block}</p>);
+        })}
       </div>
 
   </div>
