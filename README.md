@@ -1,3 +1,8 @@
 # React-Tailwind Generator with LLM
 
-Demo link -> https://twitter.com/winnieh_c/status/1690516170640957441
+v1
+- Added prompt to generate code as desired
+- Cleaned responses
+- Editable Text Interface
+- Code file Download
+- [Demo link](https://x.com/winnieh_c/status/1692378103861887333)
